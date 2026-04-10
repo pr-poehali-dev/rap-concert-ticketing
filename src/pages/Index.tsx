@@ -2,8 +2,8 @@ import { useState, useEffect, useCallback } from "react";
 import Icon from "@/components/ui/icon";
 
 const API_URL = "https://functions.poehali.dev/45d741fd-433c-4a63-82c0-13be20d1f2f0";
-const CONCERT_DATE = new Date("2025-04-12T15:15:00+03:00");
-const CONCERT_END = new Date("2025-04-12T16:00:00+03:00");
+const CONCERT_DATE = new Date("2026-04-11T15:15:00+03:00");
+const CONCERT_END = new Date("2026-04-11T16:00:00+03:00");
 const ARTIST_IMG = "https://cdn.poehali.dev/projects/e4316de2-88ee-4404-b322-a98efbb4c99d/files/c4a2489a-2ad9-4de0-91e3-ea0b3042dcaa.jpg";
 
 type Zone = "vip" | "premium" | "standard" | "fan";
@@ -57,12 +57,23 @@ export default function Index() {
 
   useEffect(() => {
     fetchSeats();
-    const tick = setInterval(() => setNow(new Date()), 30000);
+    const tick = setInterval(() => setNow(new Date()), 1000);
     return () => clearInterval(tick);
   }, [fetchSeats]);
 
   const status = getEventStatus(now);
   const allTaken = seats.length > 0 && seats.every(s => s.taken);
+
+  const getCountdown = () => {
+    const diff = CONCERT_DATE.getTime() - now.getTime();
+    if (diff <= 0) return null;
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+    return { days, hours, minutes, seconds };
+  };
+  const countdown = getCountdown();
 
   const toggleSeat = (seatId: number) => {
     if (status !== "upcoming") return;
@@ -202,6 +213,25 @@ export default function Index() {
                   <div className="font-druk text-lg text-white">11 АПРЕЛЯ 2025</div>
                 </div>
               </div>
+
+              {/* Countdown timer */}
+              {status === "upcoming" && countdown && (
+                <div className="flex gap-3 mb-8">
+                  {[
+                    { val: countdown.days,    label: "дней" },
+                    { val: countdown.hours,   label: "часов" },
+                    { val: countdown.minutes, label: "минут" },
+                    { val: countdown.seconds, label: "секунд" },
+                  ].map(({ val, label }) => (
+                    <div key={label} className="ticket-card px-4 py-3 rounded-lg text-center min-w-[64px]">
+                      <div className="font-druk text-2xl text-red-500 leading-none tabular-nums">
+                        {String(val).padStart(2, "0")}
+                      </div>
+                      <div className="text-white/30 text-[10px] uppercase tracking-widest mt-1">{label}</div>
+                    </div>
+                  ))}
+                </div>
+              )}
 
               {status === "upcoming" && !allTaken && (
                 <a
