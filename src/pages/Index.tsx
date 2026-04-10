@@ -96,10 +96,6 @@ export default function Index() {
   };
 
   const handleBuy = async () => {
-    if (!form.name.trim() || !form.email.trim()) {
-      setFormError("Заполните имя и email");
-      return;
-    }
     setBuying(true);
     setFormError("");
     setError("");
@@ -490,7 +486,7 @@ export default function Index() {
                 {/* Form */}
                 <div className="space-y-3 mb-6">
                   <div>
-                    <label className="text-white/40 text-xs uppercase tracking-widest block mb-1.5">Имя *</label>
+                    <label className="text-white/40 text-xs uppercase tracking-widest block mb-1.5">Имя</label>
                     <input
                       type="text"
                       placeholder="Иван Иванов"
@@ -500,7 +496,7 @@ export default function Index() {
                     />
                   </div>
                   <div>
-                    <label className="text-white/40 text-xs uppercase tracking-widest block mb-1.5">Email *</label>
+                    <label className="text-white/40 text-xs uppercase tracking-widest block mb-1.5">Email</label>
                     <input
                       type="email"
                       placeholder="ivan@mail.ru"
