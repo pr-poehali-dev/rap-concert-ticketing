@@ -1,0 +1,12 @@
+{
+  "tests": [
+    {
+      "name": "Get all seats",
+      "method": "GET",
+      "path": "/",
+      "expectedStatus": 200,
+      "expectedBody": {"seats": [{"id": 1}]},
+      "bodyMatcher": "partial"
+    }
+  ]
+}
