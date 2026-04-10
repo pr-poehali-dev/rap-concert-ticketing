@@ -31,7 +31,7 @@ def handler(event: dict, context) -> dict:
         seats = [{"id": r[0], "row": r[1], "seat": r[2], "zone": r[3], "price": r[4], "taken": r[5]} for r in rows]
         return {"statusCode": 200, "headers": headers, "body": json.dumps({"seats": seats})}
 
-    if method == "POST" and "/buy" in path:
+    if method == "POST":
         body = json.loads(event.get("body") or "{}")
         seat_ids = body.get("seat_ids", [])
         if not seat_ids:
